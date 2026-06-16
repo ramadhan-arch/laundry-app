@@ -1,3 +1,8 @@
+// Pages Admin: LaundryKu
+// Dikerjakan oleh: Clara Ragil Dewanti
+// NIM: 2410501116
+// Tanggal: 16 Juni 2026
+
 import { useEffect, useState } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
 import { getPayments } from '../../services/api';
