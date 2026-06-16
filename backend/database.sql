@@ -1,3 +1,8 @@
+// database: LaundryKu
+// Dikerjakan oleh: Ananda Wirajaya
+// NIM: 2410501111
+// Tanggal: 16 Juni 2026
+
 -- Jalankan di phpMyAdmin tab SQL
 CREATE DATABASE IF NOT EXISTS laundry_db CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE laundry_db;
