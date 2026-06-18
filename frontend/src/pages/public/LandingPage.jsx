@@ -1,3 +1,8 @@
+// Pages Member: LaundryKu
+// Dikerjakan oleh: Kirana Fitria U.
+// NIM: 2410501117
+// Tanggal: 18 Juni 2026
+
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getServices } from '../../services/api';
