@@ -111,7 +111,7 @@ CREATE TABLE settings (
 
 -- Admin default (password: admin123)
 INSERT INTO users (name, email, password, role, phone) VALUES
-('Admin LaundryKu', 'admin@laundry.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lihO', 'admin', '081234567890');
+('Admin LaundryKu', 'admin@laundry.com', '$2a$10$92IXUNpkj00r0Q5byMi.Ye4oKoEa3Ro911C/.og/at2.uheWG/igi', 'admin', '081234567890');
 
 -- Services default
 INSERT INTO services (name, description, price_per_kg, price_per_item, unit, estimated_days) VALUES
