@@ -1,7 +1,3 @@
-// Controller: LaundryKu
-// Dikerjakan oleh: Rizky Ramadhan
-// NIM: 2410501112
-// Tanggal: 16 Juni 2026
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { User, Customer } = require('../models');

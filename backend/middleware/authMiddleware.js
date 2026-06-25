@@ -1,8 +1,3 @@
-// authmiddleware: LaundryKu
-// Dikerjakan oleh: Ananda Wirajaya
-// NIM: 2410501111
-// Tanggal: 16 Juni 2026
-
 const jwt = require('jsonwebtoken');
 
 const auth = (req, res, next) => {

@@ -1,8 +1,3 @@
-// config: LaundryKu
-// Dikerjakan oleh: Ananda Wirajaya
-// NIM: 2410501111
-// Tanggal: 16 Juni 2026
-
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 const sequelize = new Sequelize(

@@ -1,8 +1,3 @@
-// Controller: LaundryKu
-// Dikerjakan oleh: Rizky Ramadhan
-// NIM: 2410501112
-// Tanggal: 16 Juni 2026 (Updated with Member Self Order)
-
 const { Order, OrderItem, Service, Customer, User, Employee, Payment, Notification } = require('../models');
 
 const makeCode = () => {

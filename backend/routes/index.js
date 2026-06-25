@@ -1,8 +1,3 @@
-// Routes/Models: LaundryKu
-// Dikerjakan oleh: Ananda Wirajaya
-// NIM: 2410501111
-// Tanggal: 16 Juni 2026 (Updated for Member Courier Logistics)
-
 const express = require('express');
 const { auth, adminOnly } = require('../middleware/authMiddleware');
 const se = require('../controllers/serviceEmployeeController');

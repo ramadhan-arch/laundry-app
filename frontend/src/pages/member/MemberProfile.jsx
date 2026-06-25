@@ -1,8 +1,3 @@
-// Pages Member: LaundryKu
-// Dikerjakan oleh: Ukhti Zahra Isyana
-// NIM: 2410501130
-// Tanggal: 17 Juni 2026
-
 import { useEffect, useState } from 'react';
 import MemberNavbar from '../../components/member/MemberNavbar';
 import { getMe, updateProfile } from '../../services/api';

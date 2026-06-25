@@ -1,8 +1,3 @@
-// Pages Admin: LaundryKu (Fixed Syntax Error)
-// Dikerjakan oleh: Clara Ragil Dewanti
-// NIM: 2410501116
-// Tanggal: 16 Juni 2026
-
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AdminLayout from '../../components/admin/AdminLayout';

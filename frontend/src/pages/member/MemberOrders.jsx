@@ -1,7 +1,3 @@
-// Pages Member: LaundryKu (Updated with Interactive Self-Payment Simulation)
-// Dikerjakan oleh: Tim UI/UX Frontend
-// Tanggal: 25 Juni 2026
-
 import { useEffect, useState } from 'react';
 import MemberNavbar from '../../components/member/MemberNavbar';
 import { useOrder } from '../../context/OrderContext';

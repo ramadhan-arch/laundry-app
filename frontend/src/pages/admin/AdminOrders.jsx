@@ -1,7 +1,3 @@
-// Pages Admin: LaundryKu (Final Anti-Blank Case-Insensitive Mapping)
-// Dikerjakan oleh: Clara Ragil Dewanti & Tim Frontend
-// NIM: 2410501116
-// Tanggal: 25 Juni 2026
 
 import { useEffect, useState } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';

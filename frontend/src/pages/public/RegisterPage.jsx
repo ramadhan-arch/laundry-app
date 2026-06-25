@@ -1,7 +1,3 @@
-// Pages Member: LaundryKu
-// Dikerjakan oleh: Kirana Fitria U.
-// NIM: 2410501117
-// Tanggal: 18 Juni 2026
 
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';

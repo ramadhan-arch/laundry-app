@@ -1,8 +1,3 @@
-// Routes/Models: LaundryKu
-// Dikerjakan oleh: Ananda Wirajaya & Team
-// NIM: 2410501111
-// Tanggal: 16 Juni 2026 (Updated with Delivery Features)
-
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
