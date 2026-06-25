@@ -1,4 +1,4 @@
-// Pages Admin: LaundryKu
+// Pages Admin: LaundryKu (Fixed Syntax Error)
 // Dikerjakan oleh: Clara Ragil Dewanti
 // NIM: 2410501116
 // Tanggal: 16 Juni 2026
@@ -12,9 +12,47 @@ import { useAuth } from '../../context/AuthContext';
 const CACHE_KEY = 'cache_dashboard';
 const CACHE_TTL = 3 * 60 * 1000;
 
-const statusLabel = { pending:'Menunggu', processing:'Diproses', washing:'Dicuci', drying:'Dikeringkan', ironing:'Disetrika', done:'Selesai', delivered:'Terkirim', cancelled:'Batal' };
-const statusColor = { pending:'#F59E0B', processing:'#3B82F6', washing:'#3B82F6', drying:'#3B82F6', ironing:'#8B5CF6', done:'#10B981', delivered:'#10B981', cancelled:'#EF4444' };
-const statusBg = { pending:'rgba(245,158,11,0.15)', processing:'rgba(59,130,246,0.15)', washing:'rgba(59,130,246,0.15)', drying:'rgba(59,130,246,0.15)', ironing:'rgba(139,92,246,0.15)', done:'rgba(16,185,129,0.15)', delivered:'rgba(16,185,129,0.15)', cancelled:'rgba(239,68,68,0.15)' };
+const statusLabel = { 
+  pending: 'Menunggu', 
+  waiting_pickup: 'Butuh Jemput 🛵',
+  pickup_process: 'Proses Jemput 🧭',
+  processing: 'Diproses', 
+  washing: 'Dicuci', 
+  drying: 'Dikeringkan', 
+  ironing: 'Disetrika', 
+  done: 'Selesai Cuci', 
+  delivery_process: 'Proses Antar 🚚',
+  delivered: 'Terkirim', 
+  cancelled: 'Batal' 
+};
+
+const statusColor = { 
+  pending: '#F59E0B', 
+  waiting_pickup: '#3B82F6',
+  pickup_process: '#3B82F6',
+  processing: '#3B82F6', 
+  washing: '#3B82F6', 
+  drying: '#3B82F6', 
+  ironing: '#8B5CF6', 
+  done: '#10B981', 
+  delivery_process: '#8B5CF6',
+  delivered: '#10B981', 
+  cancelled: '#EF4444' 
+};
+
+const statusBg = { 
+  pending: 'rgba(245,158,11,0.15)', 
+  waiting_pickup: 'rgba(59,130,246,0.15)',
+  pickup_process: 'rgba(59,130,246,0.15)',
+  processing: 'rgba(59,130,246,0.15)', 
+  washing: 'rgba(59,130,246,0.15)', 
+  drying: 'rgba(59,130,246,0.15)', 
+  ironing: 'rgba(139,92,246,0.15)', 
+  done: 'rgba(16,185,129,0.15)', 
+  delivery_process: 'rgba(139,92,246,0.15)',
+  delivered: 'rgba(16,185,129,0.15)', 
+  cancelled: 'rgba(239,68,68,0.15)' 
+};
 
 const card = { background:'#111118', border:'0.5px solid rgba(255,255,255,0.06)', borderRadius:16 };
 
@@ -58,10 +96,12 @@ export default function AdminDashboard() {
     return 'Selamat malam';
   };
 
+  const pickupQueueCount = data?.recentOrders?.filter(o => o.status === 'waiting_pickup').length || 0;
+
   if (loading) return (
     <AdminLayout title="Dashboard">
       <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', height:400, gap:16 }}>
-        <div className="spin" />
+        <div style={{ display:'inline-block', width:28, height:28, border:'3px solid #6C9CF8', borderTopColor:'transparent', borderRadius:'50%', animation:'spin 1s linear infinite' }} />
         <div style={{ color:'rgba(255,255,255,0.3)', fontSize:13 }}>Memuat data dashboard...</div>
       </div>
     </AdminLayout>
@@ -82,6 +122,19 @@ export default function AdminDashboard() {
           <button onClick={() => loadData(true)} style={{ fontSize:12, color:'#93B4FC', background:'rgba(29,78,216,0.2)', border:'0.5px solid rgba(29,78,216,0.3)', borderRadius:8, padding:'6px 12px', cursor:'pointer' }}>🔄 Refresh</button>
         </div>
       </div>
+
+      {/* COURIER ALERT BAR */}
+      {pickupQueueCount > 0 && (
+        <div style={{ background: 'rgba(245,158,11,0.1)', border: '0.5px solid rgba(245,158,11,0.3)', borderRadius: 12, padding: '12px 20px', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div style={{ fontSize: 18 }}>🛵</div>
+          <div style={{ fontSize: 13, color: '#F59E0B' }}>
+            Ada <strong>{pickupQueueCount} orderan member baru</strong> yang membutuhkan penjemputan pakaian oleh kurir!
+          </div>
+          <Link to="/admin/orders" style={{ marginLeft: 'auto', fontSize: 12, color: '#6C9CF8', fontWeight: 600, textDecoration: 'none' }}>
+            Proses Kurir →
+          </Link>
+        </div>
+      )}
 
       {/* STAT CARDS */}
       <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:14, marginBottom:20 }}>
@@ -158,8 +211,8 @@ export default function AdminDashboard() {
                     Rp {Number(o.total_amount||0).toLocaleString('id-ID')}
                   </td>
                   <td style={{ padding:'14px 16px' }}>
-                    <span style={{ fontSize:11, padding:'4px 10px', borderRadius:20, background:statusBg[o.status], color:statusColor[o.status], fontWeight:500, whiteSpace:'nowrap' }}>
-                      {statusLabel[o.status]}
+                    <span style={{ fontSize:11, padding:'4px 10px', borderRadius:20, background:statusBg[o.status] || 'rgba(255,255,255,0.05)', color:statusColor[o.status] || '#fff', fontWeight:500, whiteSpace:'nowrap' }}>
+                      {statusLabel[o.status] || o.status}
                     </span>
                   </td>
                   <td style={{ padding:'14px 16px' }}>

@@ -99,7 +99,7 @@ export default function LoginPage() {
 
           <div style={{ marginTop:20, padding:'14px 16px', background:'#EFF6FF', borderRadius:12, border:'0.5px solid #BFDBFE' }}>
             <div style={{ fontSize:12, fontWeight:600, color:'#1D4ED8', marginBottom:6 }}>Demo login:</div>
-            <div style={{ fontSize:12, color:'#3B82F6' }}>Admin: admin@laundry.com / password</div>
+            <div style={{ fontSize:12, color:'#3B82F6' }}>Admin: admin@laundry.com / admin123</div>
           </div>
 
           <div style={{ textAlign:'center', marginTop:20 }}>

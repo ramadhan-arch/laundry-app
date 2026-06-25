@@ -1,7 +1,7 @@
 // Routes/Models: LaundryKu
-// Dikerjakan oleh: Ananda Wirajaya
+// Dikerjakan oleh: Ananda Wirajaya & Team
 // NIM: 2410501111
-// Tanggal: 16 Juni 2026
+// Tanggal: 16 Juni 2026 (Updated with Delivery Features)
 
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
@@ -46,8 +46,31 @@ const Order = sequelize.define('Order', {
   pickup_date: DataTypes.DATEONLY,
   estimated_done: DataTypes.DATEONLY,
   done_date: DataTypes.DATEONLY,
+  
+  // METODE ANTAR JEMPUT DRIVER
+  delivery_method: { 
+    type: DataTypes.ENUM('drop_off_pickup_self', 'pickup_only', 'delivery_only', 'shuttle'), 
+    defaultValue: 'drop_off_pickup_self' 
+  },
+
+  // ALAMAT OPERASIONAL JEMPUT & ANTAR
+  pickup_address: { type: DataTypes.TEXT, allowNull: true },
+  delivery_address: { type: DataTypes.TEXT, allowNull: true },
+
   status: {
-    type: DataTypes.ENUM('pending','processing','washing','drying','ironing','done','delivered','cancelled'),
+    type: DataTypes.ENUM(
+      'pending', 
+      'waiting_pickup',    
+      'pickup_process',    
+      'processing', 
+      'washing', 
+      'drying', 
+      'ironing', 
+      'done', 
+      'delivery_process',  
+      'delivered', 
+      'cancelled'
+    ),
     defaultValue: 'pending'
   },
   notes: DataTypes.TEXT,

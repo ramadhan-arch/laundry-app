@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useCallback } from 'react';
-import { getOrders, getMyOrders, getServices } from '../services/api';
+import { getOrders, getMyOrders, getServices, createMemberOrder } from '../services/api';
 
 const OrderContext = createContext();
 
@@ -9,7 +9,6 @@ export const OrderProvider = ({ children }) => {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // ── CACHE HELPERS ─────────────────────────────────────
   const saveCache = (key, data) => {
     localStorage.setItem(key, JSON.stringify({ data, ts: Date.now() }));
   };
@@ -26,7 +25,6 @@ export const OrderProvider = ({ children }) => {
 
   const clearCache = (...keys) => keys.forEach(k => localStorage.removeItem(k));
 
-  // ── FETCH ORDERS (admin) ───────────────────────────────
   const fetchOrders = useCallback(async (force = false) => {
     if (!force) {
       const cached = loadCache('cache_orders');
@@ -41,7 +39,6 @@ export const OrderProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  // ── FETCH MY ORDERS (member) ───────────────────────────
   const fetchMyOrders = useCallback(async (force = false) => {
     if (!force) {
       const cached = loadCache('cache_my_orders');
@@ -56,10 +53,9 @@ export const OrderProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  // ── FETCH SERVICES ────────────────────────────────────
   const fetchServices = useCallback(async (force = false) => {
     if (!force) {
-      const cached = loadCache('cache_services', 10 * 60 * 1000); // 10 menit
+      const cached = loadCache('cache_services', 10 * 60 * 1000);
       if (cached) { setServices(cached); return; }
     }
     try {
@@ -69,7 +65,19 @@ export const OrderProvider = ({ children }) => {
     } catch {}
   }, []);
 
-  // ── INVALIDATE setelah create/update/delete ────────────
+  const handleCreateMemberOrder = async (orderData) => {
+    setLoading(true);
+    try {
+      const res = await createMemberOrder(orderData);
+      invalidateOrders(); 
+      setLoading(false);
+      return res.data;
+    } catch (err) {
+      setLoading(false);
+      throw err;
+    }
+  };
+
   const invalidateOrders = () => {
     clearCache('cache_orders', 'cache_my_orders');
     setOrders([]);
@@ -90,6 +98,7 @@ export const OrderProvider = ({ children }) => {
     <OrderContext.Provider value={{
       orders, myOrders, services, loading,
       fetchOrders, fetchMyOrders, fetchServices,
+      handleCreateMemberOrder,
       invalidateOrders, invalidateServices, clearAllCache,
     }}>
       {children}

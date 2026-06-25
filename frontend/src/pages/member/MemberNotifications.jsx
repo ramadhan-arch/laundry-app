@@ -1,8 +1,3 @@
-// Pages Member: LaundryKu
-// Dikerjakan oleh: Ukhti Zahra Isyana
-// NIM: 2410501130
-// Tanggal: 17 Juni 2026
-
 import { useEffect, useState } from 'react';
 import MemberNavbar from '../../components/member/MemberNavbar';
 import { getNotifications, readNotification } from '../../services/api';
@@ -27,17 +22,19 @@ export default function MemberNotifications() {
   const unread = notifs.filter(n => !n.is_read).length;
 
   const getIcon = title => {
-    if (title.includes('Diterima')) return { icon:'📬', bg:'#DBEAFE', color:'#1D4ED8' };
-    if (title.includes('Dicuci') || title.includes('washing')) return { icon:'🫧', bg:'#EDE9FE', color:'#7C3AED' };
-    if (title.includes('Selesai') || title.includes('done')) return { icon:'✅', bg:'#DCFCE7', color:'#16A34A' };
-    if (title.includes('Dikirim')) return { icon:'🚚', bg:'#DCFCE7', color:'#16A34A' };
+    const t = title.toLowerCase();
+    if (t.includes('diterima') || t.includes('berhasil dibuat')) return { icon:'📬', bg:'#DBEAFE', color:'#1D4ED8' };
+    if (t.includes('jemput') || t.includes('pickup')) return { icon:'🛵', bg:'#E0F2FE', color:'#0369A1' }; 
+    if (t.includes('dicuci') || t.includes('washing') || t.includes('proses')) return { icon:'🫧', bg:'#EDE9FE', color:'#7C3AED' };
+    if (t.includes('selesai') || t.includes('done')) return { icon:'✅', bg:'#DCFCE7', color:'#16A34A' };
+    if (t.includes('dikirim') || t.includes('antar') || t.includes('delivery')) return { icon:'🚚', bg:'#F0FDF4', color:'#15803D' }; 
     return { icon:'🔔', bg:'#FEF3C7', color:'#D97706' };
   };
 
   return (
     <div style={{ background:'#F8F7F4', minHeight:'100vh', fontFamily:"'Inter',-apple-system,sans-serif" }}>
       <MemberNavbar />
-      <div style={{ maxWidth:640, margin:'0 auto', padding:'32px 24px' }}>
+      <div style={{ maxWidth: 640, margin:'0 auto', padding:'32px 24px' }}>
 
         <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:24 }}>
           <div>
@@ -59,7 +56,7 @@ export default function MemberNotifications() {
 
         {loading ? (
           <div style={{ textAlign:'center', padding:60 }}>
-            <div className="spin" style={{ borderTopColor:'#1D4ED8', borderColor:'rgba(29,78,216,0.15)' }} />
+            <div style={{ display:'inline-block', width:24, height:24, border:'2.5px solid #1D4ED8', borderTopColor:'transparent', borderRadius:'50%', animation:'spin 1s linear infinite' }} />
             <p style={{ marginTop:12, fontSize:13, color:'#9CA3AF' }}>Memuat notifikasi...</p>
           </div>
         ) : notifs.length === 0 ? (

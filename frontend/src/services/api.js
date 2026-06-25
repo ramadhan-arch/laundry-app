@@ -39,6 +39,7 @@ export const getOrders = () => api.get('/orders');
 export const getMyOrders = () => api.get('/orders/my');
 export const getOrder = id => api.get(`/orders/${id}`);
 export const createOrder = d => api.post('/orders', d);
+export const createMemberOrder = d => api.post('/orders/member', d); // ← KODE BARU AXIOS MEMBER
 export const updateOrderStatus = (id,d) => api.put(`/orders/${id}/status`, d);
 export const deleteOrder = id => api.delete(`/orders/${id}`);
 

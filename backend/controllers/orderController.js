@@ -1,7 +1,8 @@
 // Controller: LaundryKu
 // Dikerjakan oleh: Rizky Ramadhan
 // NIM: 2410501112
-// Tanggal: 16 Juni 2026
+// Tanggal: 16 Juni 2026 (Updated with Member Self Order)
+
 const { Order, OrderItem, Service, Customer, User, Employee, Payment, Notification } = require('../models');
 
 const makeCode = () => {
@@ -90,7 +91,6 @@ exports.create = async (req, res) => {
 
     await Customer.increment('total_orders', { where: { id: customer_id } });
 
-    // notif ke customer
     const cust = await Customer.findByPk(customer_id, { include: [User] });
     if (cust?.User) {
       await Notification.create({
@@ -101,6 +101,65 @@ exports.create = async (req, res) => {
     }
 
     res.status(201).json({ message: 'Order berhasil dibuat', order });
+  } catch (err) { res.status(500).json({ message: err.message }); }
+};
+
+// FITUR BARU: PESAN MANDIRI DARI SISI MEMBER 
+exports.createMemberOrder = async (req, res) => {
+  try {
+    const { items, notes, delivery_method, pickup_address, delivery_address } = req.body;
+    
+    const customer = await Customer.findOne({ where: { user_id: req.user.id } });
+    if (!customer) return res.status(404).json({ message: 'Profil pelanggan tidak ditemukan' });
+
+    const today = new Date().toISOString().split('T')[0];
+    let total = 0;
+    const itemsData = [];
+
+    for (const item of items) {
+      const svc = await Service.findByPk(item.service_id);
+      if (!svc) continue;
+      const price = svc.unit === 'kg' ? Number(svc.price_per_kg) : Number(svc.price_per_item);
+      const subtotal = price * item.quantity;
+      total += subtotal;
+      itemsData.push({ service_id: item.service_id, quantity: item.quantity, price, subtotal });
+    }
+
+    const maxDays = Math.max(...(await Promise.all(items.map(i => Service.findByPk(i.service_id)))).map(s => s?.estimated_days || 2));
+    const estDone = new Date(); 
+    estDone.setDate(estDone.getDate() + maxDays);
+
+    const initialStatus = (delivery_method === 'pickup_only' || delivery_method === 'shuttle') 
+      ? 'waiting_pickup' 
+      : 'pending';
+
+    const order = await Order.create({
+      order_code: makeCode(),
+      customer_id: customer.id,
+      employee_id: null, 
+      order_date: today,
+      estimated_done: estDone.toISOString().split('T')[0],
+      delivery_method: delivery_method || 'drop_off_pickup_self',
+      pickup_address: (delivery_method === 'pickup_only' || delivery_method === 'shuttle') ? pickup_address : null,
+      delivery_address: (delivery_method === 'delivery_only' || delivery_method === 'shuttle') ? delivery_address : null,
+      notes: notes || '',
+      total_amount: total,
+      status: initialStatus,
+    });
+
+    for (const item of itemsData) {
+      await OrderItem.create({ ...item, order_id: order.id });
+    }
+
+    await customer.increment('total_orders');
+
+    await Notification.create({
+      user_id: req.user.id,
+      title: 'Order Berhasil Dibuat!',
+      message: `Pesanan ${order.order_code} sedang diproses dengan metode: ${delivery_method}. Total: Rp ${total.toLocaleString('id-ID')}`,
+    });
+
+    res.status(201).json({ message: 'Order berhasil dikirim ke admin', order });
   } catch (err) { res.status(500).json({ message: err.message }); }
 };
 
@@ -117,8 +176,19 @@ exports.updateStatus = async (req, res) => {
 
     await order.update(updateData);
 
-    // notif ke customer
-    const statusLabel = { processing:'Sedang Diproses', washing:'Sedang Dicuci', drying:'Sedang Dikeringkan', ironing:'Sedang Disetrika', done:'Selesai! Siap Diambil', delivered:'Sudah Dikirim', cancelled:'Dibatalkan' };
+    const statusLabel = { 
+      waiting_pickup: 'Menunggu Penjemputan',
+      pickup_process: 'Kurir Sedang Menuju Rumahmu',
+      processing:'Sedang Diproses', 
+      washing:'Sedang Dicuci', 
+      drying:'Sedang Dikeringkan', 
+      ironing:'Sedang Disetrika', 
+      done:'Selesai! Siap Diambil', 
+      delivery_process: 'Pakaian Sedang Diantar Kurir',
+      delivered:'Sudah Dikirim', 
+      cancelled:'Dibatalkan' 
+    };
+    
     if (order.Customer?.User && statusLabel[status]) {
       await Notification.create({
         user_id: order.Customer.User.id,

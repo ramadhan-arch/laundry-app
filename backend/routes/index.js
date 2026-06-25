@@ -1,7 +1,7 @@
 // Routes/Models: LaundryKu
 // Dikerjakan oleh: Ananda Wirajaya
 // NIM: 2410501111
-// Tanggal: 16 Juni 2026
+// Tanggal: 16 Juni 2026 (Updated for Member Courier Logistics)
 
 const express = require('express');
 const { auth, adminOnly } = require('../middleware/authMiddleware');
@@ -45,13 +45,14 @@ orderR.get('/', auth, adminOnly, ord.getAll);
 orderR.get('/my', auth, ord.getMyOrders);
 orderR.get('/:id', auth, ord.getOne);
 orderR.post('/', auth, adminOnly, ord.create);
+orderR.post('/member', auth, ord.createMemberOrder); // ← ENDPOINT BARU MEMbER ORDER
 orderR.put('/:id/status', auth, adminOnly, ord.updateStatus);
 orderR.delete('/:id', auth, adminOnly, ord.destroy);
 
 // PAYMENT ROUTES
 const paymentR = express.Router();
-paymentR.get('/', auth, adminOnly, oth.getAllPayments);
-paymentR.post('/', auth, adminOnly, oth.createPayment);
+paymentR.get('/', auth, adminOnly, oth.getAllPayments); 
+paymentR.post('/', auth, oth.createPayment);
 
 // EXPENSE ROUTES
 const expenseR = express.Router();
